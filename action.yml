@@ -1,0 +1,69 @@
+name: "Augment Agent"
+description: "AI-powered code assistance for GitHub pull requests using Augment's intelligent development tools"
+author: "Augment Code"
+
+inputs:
+  augment_session_auth:
+    description: "Augment session authentication JSON. Alternative to augment_api_token and augment_api_url. Store as repository secret for security."
+    required: false
+  augment_api_token:
+    description: "API token for Augment services. Store as repository secret for security. Alternative to augment_session_auth."
+    required: false
+  augment_api_url:
+    description: "URL endpoint for Augment API requests. Store as repository variable. Alternative to augment_session_auth."
+    required: false
+  github_token:
+    description: "GitHub token for API access. Must have 'repo' and 'user:email' scopes."
+    required: false
+  instruction:
+    description: "Direct instruction text for the AI agent. Use this for simple, inline instructions. Mutually exclusive with instruction_file and template inputs."
+    required: false
+  instruction_file:
+    description: "Path to file containing detailed instructions for the AI agent. Use this for complex, multi-line instructions. Mutually exclusive with instruction and template inputs."
+    required: false
+  template_directory:
+    description: "Path to directory containing template files. Use this for template-based instruction generation. Mutually exclusive with instruction and instruction_file."
+    required: false
+  template_name:
+    description: "Name of the template file to use (default: prompt.njk). Only used with template_directory."
+    required: false
+    default: "prompt.njk"
+  pull_number:
+    description: "Pull request number for extracting PR context. Required when using templates with PR data."
+    required: false
+  repo_name:
+    description: "Repository name in format 'owner/repo'. Required when using templates with PR data."
+    required: false
+  custom_context:
+    description: "Additional context data as JSON string to pass to templates."
+    required: false
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Node
+      uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+      with:
+        node-version: 22
+    - name: Setup Auggie
+      run: npm install -g @augmentcode/auggie
+      shell: bash
+    - name: Setup Bun
+      uses: oven-sh/setup-bun@735343b667d3e6f658f44d0eca948eb6282f2b76 # v2.0.2
+      with:
+        bun-version: latest
+    - name: Run Augment Agent
+      run: bun run $GITHUB_ACTION_PATH/src/index.ts
+      shell: bash
+      env:
+        INPUT_AUGMENT_SESSION_AUTH: ${{ inputs.augment_session_auth }}
+        INPUT_AUGMENT_API_TOKEN: ${{ inputs.augment_api_token }}
+        INPUT_AUGMENT_API_URL: ${{ inputs.augment_api_url }}
+        INPUT_GITHUB_TOKEN: ${{ inputs.github_token }}
+        INPUT_INSTRUCTION: ${{ inputs.instruction }}
+        INPUT_INSTRUCTION_FILE: ${{ inputs.instruction_file }}
+        INPUT_TEMPLATE_DIRECTORY: ${{ inputs.template_directory }}
+        INPUT_TEMPLATE_NAME: ${{ inputs.template_name }}
+        INPUT_PULL_NUMBER: ${{ inputs.pull_number }}
+        INPUT_REPO_NAME: ${{ inputs.repo_name }}
+        INPUT_CUSTOM_CONTEXT: ${{ inputs.custom_context }}

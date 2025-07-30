@@ -1,0 +1,46 @@
+name: Augment Agent - PR Description
+on:
+  pull_request:
+    types: [opened]
+
+jobs:
+  generate-pr-description:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Create instruction file
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REPOSITORY: ${{ github.repository }}
+          BASE_BRANCH: ${{ github.event.pull_request.base.ref }}
+          HEAD_BRANCH: ${{ github.event.pull_request.head.ref }}
+        run: |
+          cat > /tmp/pr-instruction.txt << EOF
+          Analyze the following pull request and generate a comprehensive PR description:
+
+          **Pull Request Information:**
+          - PR Number: ${PR_NUMBER}
+          - Repository: ${REPOSITORY}
+          - Base Branch: ${BASE_BRANCH}
+          - Head Branch: ${HEAD_BRANCH}
+
+          **Task:**
+          Please analyze the code changes in this pull request and generate a comprehensive PR description including:
+          - A clear summary of what was changed
+          - The purpose and motivation for the changes
+          - Key modifications made to specific files
+          - Any testing considerations or notes for reviewers
+          - Breaking changes or migration notes if applicable
+
+          Focus on the actual code changes and provide a description that would help reviewers understand the scope and impact of this PR.
+
+          Once you're done, please post the description as a comment on the PR.
+          EOF
+      - name: Generate PR Description
+        uses: augmentcode/augment-agent@v0
+        with:
+          augment_session_auth: ${{ secrets.AUGMENT_SESSION_AUTH }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          instruction_file: /tmp/pr-instruction.txt

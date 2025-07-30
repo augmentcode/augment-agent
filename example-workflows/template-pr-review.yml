@@ -1,0 +1,90 @@
+name: Augment Agent - Template-Based PR Review
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  template-review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Create template directory
+        run: |
+          mkdir -p .github/templates
+
+      - name: Create PR review template
+        run: |
+          cat > .github/templates/pr-review.njk << 'EOF'
+          Please review pull request #{{ pr.number }}: "{{ pr.title }}"
+
+          **Author:** {{ pr.author }}
+          **Branch:** {{ pr.head.ref }} → {{ pr.base.ref }}
+          **Repository:** {{ pr.base.repo.full_name }}
+
+          {% if pr.body %}
+          **Description:**
+          {{ pr.body }}
+          {% endif %}
+
+          **Changed Files ({{ pr.changed_files_list | length }} total):**
+          {{ pr.changed_files_list | format_files }}
+
+          {% if pr.changed_files_list | length > 15 %}
+          ⚠️ This is a large PR with {{ pr.changed_files_list | length }} files changed. Please pay special attention to the scope and impact.
+          {% endif %}
+
+          {% set has_tests = pr.changed_files | includes("test") or pr.changed_files | includes("spec") %}
+          {% if not has_tests %}
+          ⚠️ No test files detected in this PR. Please verify that appropriate tests have been added or updated.
+          {% endif %}
+
+          **Code Changes:**
+          ```diff
+          {{ pr.diff_file | maybe_read_file }}
+          ```
+
+          **Review Focus:**
+          Please provide a thorough code review covering:
+
+          1. **Code Quality**: Check for adherence to coding standards and best practices
+          2. **Security**: Look for potential security vulnerabilities or concerns
+          3. **Performance**: Assess any performance implications of the changes
+          4. **Maintainability**: Evaluate code readability and maintainability
+          5. **Testing**: Verify adequate test coverage for new functionality
+          6. **Documentation**: Check if documentation updates are needed
+
+          {% if custom.priority %}
+          **Priority Level:** {{ custom.priority | upper }}
+          {% if custom.priority == "high" %}
+          🚨 This is a high-priority PR requiring urgent review and approval.
+          {% endif %}
+          {% endif %}
+
+          {% if custom.reviewers %}
+          **Suggested Reviewers:** {{ custom.reviewers | join(", ") }}
+          {% endif %}
+
+          Please provide specific, actionable feedback with file and line references where applicable.
+          Focus on the actual code changes and their impact on the codebase.
+
+          After your review, please post your feedback as a review comment on this PR.
+          EOF
+
+      - name: Template-Based Code Review
+        uses: augmentcode/augment-agent@v0
+        with:
+          augment_session_auth: ${{ secrets.AUGMENT_SESSION_AUTH }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          template_directory: ".github/templates"
+          template_name: "pr-review.njk"
+          pull_number: ${{ github.event.pull_request.number }}
+          repo_name: ${{ github.repository }}
+          custom_context: |
+            {
+              "priority": "normal",
+              "reviewers": ["team-lead", "senior-dev"],
+              "focus_areas": ["security", "performance"]
+            }

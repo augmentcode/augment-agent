@@ -1,0 +1,58 @@
+name: Augment Agent - Issue Triage
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  triage-issue:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Create instruction file
+        env:
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          REPOSITORY: ${{ github.repository }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          ISSUE_AUTHOR: ${{ github.event.issue.user.login }}
+          CURRENT_LABELS: ${{ join(github.event.issue.labels.*.name, ', ') }}
+        run: |
+          cat > /tmp/triage-instruction.txt << EOF
+          Analyze the following GitHub issue and provide comprehensive triage recommendations:
+
+          **Issue Information:**
+          - Issue Number: ${ISSUE_NUMBER}
+          - Repository: ${REPOSITORY}
+          - Title: ${ISSUE_TITLE}
+          - Author: ${ISSUE_AUTHOR}
+          - Current Labels: ${CURRENT_LABELS}
+
+          **Triage Analysis:**
+          Please analyze this issue and provide detailed triage recommendations including:
+          - **Priority Level**: Assess urgency and impact (Critical/High/Medium/Low)
+          - **Issue Type**: Categorize the issue (bug, feature request, enhancement, documentation, question, etc.)
+          - **Complexity Estimate**: Evaluate implementation complexity (Simple/Medium/Complex)
+          - **Suggested Labels**: Recommend appropriate labels for categorization
+          - **Team/Component**: Identify which team or component this issue relates to
+          - **Dependencies**: Note any dependencies or blockers mentioned
+          - **Reproducibility**: For bugs, assess if reproduction steps are clear
+          - **Acceptance Criteria**: Identify if requirements are well-defined
+          - **Similar Issues**: Note if this appears related to existing issues
+
+          **Recommendations:**
+          - Suggest next steps for handling this issue
+          - Recommend if additional information is needed from the reporter
+          - Identify potential assignees or teams based on the issue content
+          - Note any immediate actions that should be taken
+
+          Focus on providing actionable insights that will help maintainers efficiently process and prioritize this issue.
+
+          Please post your triage analysis as a comment on the issue.
+          EOF
+      - name: Triage Issue
+        uses: augmentcode/augment-agent@v0
+        with:
+          augment_session_auth: ${{ secrets.AUGMENT_SESSION_AUTH }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          instruction_file: /tmp/triage-instruction.txt
