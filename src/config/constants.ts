@@ -24,6 +24,7 @@ export const INPUT_FIELD_MAP: Record<string, InputField> = {
   repoName: { envVar: 'INPUT_REPO_NAME', required: false },
   templateDirectory: { envVar: 'INPUT_TEMPLATE_DIRECTORY', required: false },
   templateName: { envVar: 'INPUT_TEMPLATE_NAME', required: false },
+  model: { envVar: 'INPUT_MODEL', required: false },
 };
 
 export const TEMPLATE_CONFIG = {
