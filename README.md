@@ -66,20 +66,20 @@ Each example includes a complete workflow file that you can copy to your `.githu
 
 ### Inputs
 
-| Input                  | Description                                           | Required | Example                                   |
-| ---------------------- | ----------------------------------------------------- | -------- | ----------------------------------------- |
-| `augment_session_auth` | Augment session authentication JSON (store as secret) | No\*\*   | `${{ secrets.AUGMENT_SESSION_AUTH }}`     |
-| `augment_api_token`    | API token for Augment services (store as secret)      | No\*\*   | `${{ secrets.AUGMENT_API_TOKEN }}`        |
-| `augment_api_url`      | Augment API endpoint URL (store as variable)          | No\*\*   | `${{ vars.AUGMENT_API_URL }}`             |
-| `github_token`         | GitHub token with `repo` and `user:email` scopes.     | No       | `${{ secrets.GITHUB_TOKEN }}`             |
-| `instruction`          | Direct instruction text for simple commands           | No\*     | `"Generate PR description"`               |
-| `instruction_file`     | Path to file with detailed instructions               | No\*     | `/tmp/instruction.txt`                    |
-| `template_directory`   | Path to template directory for dynamic instructions   | No\*     | `.github/templates`                       |
-| `template_name`        | Template file name (default: prompt.njk)              | No       | `pr-review.njk`                           |
-| `pull_number`          | PR number for template context extraction             | No       | `${{ github.event.pull_request.number }}` |
-| `repo_name`            | Repository name for template context                  | No       | `${{ github.repository }}`                |
-| `custom_context`       | Additional JSON context for templates                 | No       | `'{"priority": "high"}'`                  |
-| `model`                | Model to use; passed through to auggie as --model     | No       | `gpt-4o-mini`                             |
+| Input                  | Description                                           | Required | Example                                     |
+| ---------------------- | ----------------------------------------------------- | -------- | ------------------------------------------- |
+| `augment_session_auth` | Augment session authentication JSON (store as secret) | No\*\*   | `${{ secrets.AUGMENT_SESSION_AUTH }}`       |
+| `augment_api_token`    | API token for Augment services (store as secret)      | No\*\*   | `${{ secrets.AUGMENT_API_TOKEN }}`          |
+| `augment_api_url`      | Augment API endpoint URL (store as variable)          | No\*\*   | `${{ vars.AUGMENT_API_URL }}`               |
+| `github_token`         | GitHub token with `repo` and `user:email` scopes.     | No       | `${{ secrets.GITHUB_TOKEN }}`               |
+| `instruction`          | Direct instruction text for simple commands           | No\*     | `"Generate PR description"`                 |
+| `instruction_file`     | Path to file with detailed instructions               | No\*     | `/tmp/instruction.txt`                      |
+| `template_directory`   | Path to template directory for dynamic instructions   | No\*     | `.github/templates`                         |
+| `template_name`        | Template file name (default: prompt.njk)              | No       | `pr-review.njk`                             |
+| `pull_number`          | PR number for template context extraction             | No       | `${{ github.event.pull_request.number }}`   |
+| `repo_name`            | Repository name for template context                  | No       | `${{ github.repository }}`                  |
+| `custom_context`       | Additional JSON context for templates                 | No       | `'{"priority": "high"}'`                    |
+| `model`                | Model to use; passed through to auggie as --model     | No       | e.g. `sonnet4`, from `auggie --list-models` |
 
 \*Either `instruction`, `instruction_file`, or `template_directory` must be provided.
 
