@@ -18,6 +18,7 @@ const ActionInputsSchema = z
     githubToken: z.string().optional(),
     instruction: z.string().optional(),
     instructionFile: z.string().optional(),
+    model: z.string().optional(),
     templateDirectory: z.string().optional(),
     templateName: z.string().default('prompt.njk'),
     customContext: z.string().optional(),

@@ -113,17 +113,19 @@ async function runAugmentScript(inputs: ActionInputs): Promise<void> {
       instructionFile: instruction_value,
     });
   }
+  const args = ["--print"];
+  if (inputs.model && inputs.model.trim().length > 0) {
+    args.push('--model', inputs.model.trim());
+  }
   if (is_file) {
     logger.info(`📄 Using instruction file: ${instruction_value}`);
-    await execCommand('auggie', [
-      '--instruction-file',
-      instruction_value,
-      '--print',
-    ]);
+    args.push('--instruction-file');
   } else {
     logger.info('📝 Using direct instruction');
-    await execCommand('auggie', ['--print', instruction_value]);
+    args.push('--instruction');
   }
+  args.push(instruction_value);
+  await execCommand('auggie', args);
   logger.info('✅ Augment Agent completed successfully');
 }
 

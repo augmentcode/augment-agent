@@ -16,6 +16,7 @@ export interface ActionInputs {
   githubToken?: string | undefined;
   instruction?: string | undefined;
   instructionFile?: string | undefined;
+  model?: string | undefined;
 
   // Template inputs
   templateDirectory?: string | undefined;
