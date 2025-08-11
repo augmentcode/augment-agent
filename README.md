@@ -79,7 +79,7 @@ Each example includes a complete workflow file that you can copy to your `.githu
 | `pull_number`          | PR number for template context extraction             | No       | `${{ github.event.pull_request.number }}` |
 | `repo_name`            | Repository name for template context                  | No       | `${{ github.repository }}`                |
 | `custom_context`       | Additional JSON context for templates                 | No       | `'{"priority": "high"}'`                  |
-| `model`                | Model to use; passed through to auggie as --model     | No       | `gpt-4o-mini`                              |
+| `model`                | Model to use; passed through to auggie as --model     | No       | `gpt-4o-mini`                             |
 
 \*Either `instruction`, `instruction_file`, or `template_directory` must be provided.
 

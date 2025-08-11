@@ -113,7 +113,7 @@ async function runAugmentScript(inputs: ActionInputs): Promise<void> {
       instructionFile: instruction_value,
     });
   }
-  const args = ["--print"];
+  const args = ['--print'];
   if (inputs.model && inputs.model.trim().length > 0) {
     args.push('--model', inputs.model.trim());
   }
