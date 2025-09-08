@@ -19,7 +19,7 @@ Example session JSON:
 
 There are 2 ways to get the credentials:
 
-- Run `auggie --print-augment-token`
+- Run `auggie tokens print`
   - Copy the JSON after `TOKEN=`
 - Copy the credentials stored in your Augment cache directory, defaulting to `~/.augment/session.json`
 
