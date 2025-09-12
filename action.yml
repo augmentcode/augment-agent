@@ -3,7 +3,7 @@ description: "AI-powered code assistance for GitHub pull requests using Augment'
 author: "Augment Code"
 branding:
   icon: "zap"
-  color: "purple""
+  color: "purple"
 
 inputs:
   augment_session_auth:
