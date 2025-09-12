@@ -1,5 +1,7 @@
 name: "Augment Agent"
 description: "AI-powered code assistance for GitHub pull requests using Augment's intelligent development tools"
+icon: "zap"
+color: "purple"
 author: "Augment Code"
 
 inputs:
