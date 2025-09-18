@@ -119,12 +119,24 @@ async function runAugmentScript(inputs: ActionInputs): Promise<void> {
   }
   if (is_file) {
     logger.info(`📄 Using instruction file: ${instruction_value}`);
-    args.push('--instruction-file');
+    args.push('--instruction-file', instruction_value);
   } else {
     logger.info('📝 Using direct instruction');
-    args.push('--instruction');
+    args.push('--instruction', instruction_value);
   }
-  args.push(instruction_value);
+
+  if (inputs.rules?.length) {
+    for (const rulePath of inputs.rules) {
+      args.push('--rules', rulePath);
+    }
+  }
+
+  if (inputs.mcpConfigs?.length) {
+    for (const configPath of inputs.mcpConfigs) {
+      args.push('--mcp-config', configPath);
+    }
+  }
+
   await execCommand('auggie', args);
   logger.info('✅ Augment Agent completed successfully');
 }

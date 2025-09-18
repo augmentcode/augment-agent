@@ -7,6 +7,36 @@ import type { ActionInputs, RepoInfo } from '../types/inputs.js';
 import { logger } from './logger.js';
 import { ERROR, INPUT_FIELD_MAP } from '../config/constants.js';
 
+const createJsonStringArraySchema = (invalidTypeMessage: string, emptyEntryMessage: string) =>
+  z.preprocess(
+    value => {
+      if (value === undefined || value === null) {
+        return undefined;
+      }
+      if (typeof value === 'string') {
+        const trimmed = value.trim();
+        if (trimmed.length === 0) {
+          return undefined;
+        }
+        try {
+          return JSON.parse(trimmed);
+        } catch {
+          return value;
+        }
+      }
+      return value;
+    },
+    z
+      .array(
+        z
+          .string()
+          .transform(val => val.trim())
+          .refine(val => val.length > 0, { message: emptyEntryMessage }),
+        { invalid_type_error: invalidTypeMessage }
+      )
+      .optional()
+  );
+
 /**
  * Zod schema for action inputs validation
  */
@@ -27,6 +57,14 @@ const ActionInputsSchema = z
       .string()
       .regex(/^[^\/]+\/[^\/]+$/, ERROR.INPUT.REPO_FORMAT)
       .optional(),
+    rules: createJsonStringArraySchema(
+      'rules must be a JSON array of strings',
+      'Rule file paths cannot be empty'
+    ),
+    mcpConfigs: createJsonStringArraySchema(
+      'mcp_configs must be a JSON array of strings',
+      'MCP config file paths cannot be empty'
+    ),
   })
   .refine(
     data => {
