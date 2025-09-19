@@ -125,14 +125,22 @@ async function runAugmentScript(inputs: ActionInputs): Promise<void> {
     args.push('--instruction', instruction_value);
   }
 
-  if (inputs.rules?.length) {
-    for (const rulePath of inputs.rules) {
+  const uniqueRules = Array.from(new Set(inputs.rules ?? [])).filter(rule => rule.length > 0);
+  if (uniqueRules.length > 0) {
+    logger.info(`🔧 Applying ${uniqueRules.length} rule file(s)`);
+    for (const rulePath of uniqueRules) {
+      logger.info(`  - ${rulePath}`);
       args.push('--rules', rulePath);
     }
   }
 
-  if (inputs.mcpConfigs?.length) {
-    for (const configPath of inputs.mcpConfigs) {
+  const uniqueMcpConfigs = Array.from(new Set(inputs.mcpConfigs ?? [])).filter(
+    config => config.length > 0
+  );
+  if (uniqueMcpConfigs.length > 0) {
+    logger.info(`🧩 Applying ${uniqueMcpConfigs.length} MCP config file(s)`);
+    for (const configPath of uniqueMcpConfigs) {
+      logger.info(`  - ${configPath}`);
       args.push('--mcp-config', configPath);
     }
   }
