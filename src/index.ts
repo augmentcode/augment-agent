@@ -119,12 +119,32 @@ async function runAugmentScript(inputs: ActionInputs): Promise<void> {
   }
   if (is_file) {
     logger.info(`📄 Using instruction file: ${instruction_value}`);
-    args.push('--instruction-file');
+    args.push('--instruction-file', instruction_value);
   } else {
     logger.info('📝 Using direct instruction');
-    args.push('--instruction');
+    args.push('--instruction', instruction_value);
   }
-  args.push(instruction_value);
+
+  const uniqueRules = Array.from(new Set(inputs.rules ?? [])).filter(rule => rule.length > 0);
+  if (uniqueRules.length > 0) {
+    logger.info(`🔧 Applying ${uniqueRules.length} rule file(s)`);
+    for (const rulePath of uniqueRules) {
+      logger.info(`  - ${rulePath}`);
+      args.push('--rules', rulePath);
+    }
+  }
+
+  const uniqueMcpConfigs = Array.from(new Set(inputs.mcpConfigs ?? [])).filter(
+    config => config.length > 0
+  );
+  if (uniqueMcpConfigs.length > 0) {
+    logger.info(`🧩 Applying ${uniqueMcpConfigs.length} MCP config file(s)`);
+    for (const configPath of uniqueMcpConfigs) {
+      logger.info(`  - ${configPath}`);
+      args.push('--mcp-config', configPath);
+    }
+  }
+
   await execCommand('auggie', args);
   logger.info('✅ Augment Agent completed successfully');
 }

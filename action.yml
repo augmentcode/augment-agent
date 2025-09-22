@@ -43,6 +43,12 @@ inputs:
   model:
     description: "Model to use; forwarded to auggie as --model"
     required: false
+  rules:
+    description: "JSON array of rules file paths. Each entry is forwarded to auggie as an individual --rules flag."
+    required: false
+  mcp_configs:
+    description: "JSON array of MCP config file paths. Each entry is forwarded to auggie as an individual --mcp-config flag."
+    required: false
 
 runs:
   using: "composite"
@@ -74,3 +80,5 @@ runs:
         INPUT_REPO_NAME: ${{ inputs.repo_name }}
         INPUT_CUSTOM_CONTEXT: ${{ inputs.custom_context }}
         INPUT_MODEL: ${{ inputs.model }}
+        INPUT_RULES: ${{ inputs.rules }}
+        INPUT_MCP_CONFIGS: ${{ inputs.mcp_configs }}

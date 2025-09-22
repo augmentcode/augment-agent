@@ -24,6 +24,10 @@ export interface ActionInputs {
   customContext?: string | undefined;
   pullNumber?: number | undefined;
   repoName?: string | undefined;
+
+  // Additional configuration inputs
+  rules?: string[] | undefined;
+  mcpConfigs?: string[] | undefined;
 }
 
 export interface RepoInfo {

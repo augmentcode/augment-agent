@@ -25,6 +25,8 @@ export const INPUT_FIELD_MAP: Record<string, InputField> = {
   templateDirectory: { envVar: 'INPUT_TEMPLATE_DIRECTORY', required: false },
   templateName: { envVar: 'INPUT_TEMPLATE_NAME', required: false },
   model: { envVar: 'INPUT_MODEL', required: false },
+  rules: { envVar: 'INPUT_RULES', required: false },
+  mcpConfigs: { envVar: 'INPUT_MCP_CONFIGS', required: false },
 };
 
 export const TEMPLATE_CONFIG = {
