@@ -60,8 +60,12 @@ runs:
     - name: Setup Auggie
       run: npm install -g @augmentcode/auggie
       shell: bash
+    - name: Install Action Dependencies
+      run: npm install --production=false
+      shell: bash
+      working-directory: ${{ github.action_path }}
     - name: Run Augment Agent
-      run: node $GITHUB_ACTION_PATH/src/index.js
+      run: npx tsx $GITHUB_ACTION_PATH/src/index.ts
       shell: bash
       env:
         INPUT_AUGMENT_SESSION_AUTH: ${{ inputs.augment_session_auth }}

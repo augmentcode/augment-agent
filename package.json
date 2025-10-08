@@ -5,7 +5,6 @@
   "main": "action.yml",
   "type": "module",
   "scripts": {
-    "build": "tsc",
     "test": "node --test",
     "typecheck": "tsc --noEmit",
     "format": "prettier --write .",
@@ -49,8 +48,8 @@
   ],
   "dependencies": {
     "@actions/core": "^1.10.1",
-    "nunjucks": "^3.2.4",
     "@octokit/rest": "^20.0.2",
+    "nunjucks": "^3.2.4",
     "yaml": "^2.3.4",
     "zod": "^3.22.4"
   },
@@ -58,6 +57,7 @@
     "@types/node": "^22.16.4",
     "@types/nunjucks": "^3.2.6",
     "prettier": "^3.6.2",
+    "tsx": "^4.20.6",
     "typescript": "^5.8.3"
   }
 }
