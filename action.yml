@@ -60,6 +60,9 @@ runs:
     - name: Setup Auggie
       run: npm install -g @augmentcode/auggie
       shell: bash
+    - name: Test list directory
+      run: ls
+      shell: bash
     - name: Run Augment Agent
       run: npm run $GITHUB_ACTION_PATH/src/index.ts
       shell: bash
