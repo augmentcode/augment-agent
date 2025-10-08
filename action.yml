@@ -64,10 +64,7 @@ runs:
       run: |
         cd $GITHUB_ACTION_PATH
         npm install
-        npx tsc
-        ls
-        ls dist
-        node dist/index.js
+        node --experimental-strip-types src/index.ts
       shell: bash
       env:
         INPUT_AUGMENT_SESSION_AUTH: ${{ inputs.augment_session_auth }}
