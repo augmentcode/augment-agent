@@ -5,14 +5,15 @@
   "main": "action.yml",
   "type": "module",
   "scripts": {
-    "test": "bun test",
-    "typecheck": "bun --bun tsc --noEmit",
+    "build": "tsc",
+    "test": "node --test",
+    "typecheck": "tsc --noEmit",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "format:staged": "prettier --write --cache --ignore-unknown",
     "lint": "prettier --check .",
     "lint:fix": "prettier --write .",
-    "dev": "bun --watch src/index.ts",
+    "dev": "node --watch src/index.ts",
     "version:patch": "npm version patch && git push && git push --tags",
     "version:minor": "npm version minor && git push && git push --tags",
     "version:major": "npm version major && git push && git push --tags"
@@ -38,8 +39,7 @@
   },
   "homepage": "https://github.com/augmentcode/augment-agent#readme",
   "engines": {
-    "node": ">=22.0.0",
-    "bun": ">=1.0.0"
+    "node": ">=22.0.0"
   },
   "files": [
     "action.yml",
