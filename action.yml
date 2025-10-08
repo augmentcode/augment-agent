@@ -65,6 +65,8 @@ runs:
         cd $GITHUB_ACTION_PATH
         npm install
         npx tsc
+        ls
+        ls dist
         node dist/index.js
       shell: bash
       env:
