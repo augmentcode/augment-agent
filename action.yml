@@ -60,11 +60,8 @@ runs:
     - name: Setup Auggie
       run: npm install -g @augmentcode/auggie
       shell: bash
-    - name: Test list directory
-      run: ls
-      shell: bash
     - name: Run Augment Agent
-      run: npm run $GITHUB_ACTION_PATH/src/index.ts
+      run: node --experimental-strip-types $GITHUB_ACTION_PATH/src/index.ts
       shell: bash
       env:
         INPUT_AUGMENT_SESSION_AUTH: ${{ inputs.augment_session_auth }}
