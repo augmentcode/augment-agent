@@ -49,6 +49,10 @@ inputs:
   mcp_configs:
     description: "JSON array of MCP config file paths. Each entry is forwarded to auggie as an individual --mcp-config flag."
     required: false
+  fetch_depth:
+    description: "Number of commits to fetch. Use '0' for full history (default), '1' for shallow clone (latest commit only), or any positive integer for a specific depth."
+    required: false
+    default: "0"
 
 runs:
   using: "composite"
