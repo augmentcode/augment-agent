@@ -2,7 +2,7 @@
  * Template engine for rendering Nunjucks templates
  */
 
-import * as nunjucks from 'nunjucks';
+import nunjucks from 'nunjucks';
 import { resolve } from 'node:path';
 import { FileUtils } from '../utils/file-utils.js';
 import { logger } from '../utils/logger.js';
