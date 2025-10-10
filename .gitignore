@@ -7,6 +7,12 @@ yarn-error.log*
 # TypeScript build info (but keep dist/ for GitHub Actions)
 *.tsbuildinfo
 
+# TypeScript compiled output in src/ (we use tsx to run directly)
+src/**/*.js
+src/**/*.d.ts
+src/**/*.js.map
+src/**/*.d.ts.map
+
 # Test coverage
 coverage/
 
