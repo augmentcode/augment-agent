@@ -69,6 +69,10 @@ runs:
       with:
         node-version: 22
 
+    - name: Install Auggie CLI
+      run: npm install -g @augmentcode/auggie
+      shell: bash
+
     - name: Install Action Dependencies
       run: npm install --production
       shell: bash
