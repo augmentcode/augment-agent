@@ -1,0 +1,49 @@
+name: "Comment Reaction"
+description: "React to GitHub comments with emoji reactions"
+author: "Augment Code"
+branding:
+  icon: "eye"
+  color: "blue"
+
+inputs:
+  github_token:
+    description: "GitHub token for API access. Must have permissions to add reactions."
+    required: true
+  comment_id:
+    description: "The ID of the comment to react to"
+    required: true
+  event_name:
+    description: "The GitHub event name (pull_request_review_comment or issue_comment)"
+    required: true
+  reaction:
+    description: "The reaction type to add (e.g., eyes, rocket, heart, hooray, confused, +1, -1, laugh)"
+    required: false
+    default: "eyes"
+
+outputs:
+  success:
+    description: "Whether the reaction was successfully added"
+    value: ${{ steps.react.outputs.success }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Node
+      uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+      with:
+        node-version: 22
+    - name: Install Action Dependencies
+      run: npm install --production
+      shell: bash
+      working-directory: ${{ github.action_path }}
+    - name: React to Comment
+      id: react
+      run: npx tsx ${{ github.action_path }}/src/index.ts
+      shell: bash
+      env:
+        INPUT_GITHUB_TOKEN: ${{ inputs.github_token }}
+        INPUT_COMMENT_ID: ${{ inputs.comment_id }}
+        INPUT_EVENT_NAME: ${{ inputs.event_name }}
+        INPUT_REACTION: ${{ inputs.reaction }}
+        GITHUB_REPOSITORY: ${{ github.repository }}
+
