@@ -1,9 +1,9 @@
-name: "Comment Reaction"
-description: "React to GitHub comments with emoji reactions"
+name: "PR Assistant"
+description: "AI-powered PR assistant that implements changes based on comments using Auggie SDK"
 author: "Augment Code"
 branding:
-  icon: "eye"
-  color: "blue"
+  icon: "zap"
+  color: "purple"
 
 inputs:
   github_token:
@@ -42,7 +42,7 @@ runs:
       run: npm install --production
       shell: bash
       working-directory: ${{ github.action_path }}
-    - name: React to Comment
+    - name: Run PR Assistant
       id: react
       run: npx tsx ${{ github.action_path }}/src/index.ts
       shell: bash
