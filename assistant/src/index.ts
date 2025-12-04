@@ -10,21 +10,7 @@ import * as exec from '@actions/exec';
 import { Octokit } from '@octokit/rest';
 import { Auggie } from '@augmentcode/auggie-sdk';
 
-/**
- * Valid GitHub reaction types
- */
-const VALID_REACTIONS = [
-  '+1',
-  '-1',
-  'laugh',
-  'confused',
-  'heart',
-  'hooray',
-  'rocket',
-  'eyes',
-] as const;
 
-type ReactionType = (typeof VALID_REACTIONS)[number];
 
 /**
  * PR Context gathered from GitHub
@@ -81,64 +67,7 @@ function parseRepository(): { owner: string; repo: string } {
   return { owner, repo };
 }
 
-/**
- * Validate reaction type
- */
-function validateReaction(reaction: string): ReactionType {
-  if (!VALID_REACTIONS.includes(reaction as ReactionType)) {
-    throw new Error(
-      `Invalid reaction type: ${reaction}. Valid reactions: ${VALID_REACTIONS.join(', ')}`
-    );
-  }
-  return reaction as ReactionType;
-}
 
-/**
- * Add reaction to a comment
- */
-async function addReaction(
-  octokit: Octokit,
-  owner: string,
-  repo: string,
-  commentId: number,
-  eventName: string,
-  reaction: ReactionType
-): Promise<void> {
-  try {
-    if (eventName === 'pull_request_review_comment') {
-      await octokit.rest.reactions.createForPullRequestReviewComment({
-        owner,
-        repo,
-        comment_id: commentId,
-        content: reaction,
-      });
-      core.info(`✅ Added :${reaction}: reaction to PR review comment ${commentId}`);
-    } else if (eventName === 'issue_comment') {
-      await octokit.rest.reactions.createForIssueComment({
-        owner,
-        repo,
-        comment_id: commentId,
-        content: reaction,
-      });
-      core.info(`✅ Added :${reaction}: reaction to issue comment ${commentId}`);
-    } else {
-      throw new Error(
-        `Unsupported event type: ${eventName}. Supported: pull_request_review_comment, issue_comment`
-      );
-    }
-  } catch (error) {
-    if (error instanceof Error) {
-      // biome-ignore lint/suspicious/noExplicitAny: POC
-      const apiError = error as any;
-      const requestId = apiError.response?.headers?.['x-github-request-id'] || 'unknown';
-      const status = apiError.status || '';
-      throw new Error(
-        `Failed to add :${reaction}: reaction (${status}): ${error.message}; requestId=${requestId}`
-      );
-    }
-    throw error;
-  }
-}
 
 /**
  * Get PR number from comment
@@ -423,7 +352,6 @@ async function main(): Promise<void> {
     const githubToken = getInput('github_token', true);
     const commentIdStr = getInput('comment_id', true);
     const eventName = getInput('event_name', true);
-    const reactionInput = getInput('reaction') || 'eyes';
 
     // Validate inputs
     const commentId = Number.parseInt(commentIdStr, 10);
@@ -431,17 +359,12 @@ async function main(): Promise<void> {
       throw new Error(`Invalid comment_id: ${commentIdStr}. Must be a number.`);
     }
 
-    const reaction = validateReaction(reactionInput);
     const { owner, repo } = parseRepository();
 
     // Create Octokit instance
     const octokit = new Octokit({ auth: githubToken });
 
-    // Step 1: Add reaction IMMEDIATELY to give user quick feedback
-    core.info('👀 Adding reaction to comment for quick feedback...');
-    await addReaction(octokit, owner, repo, commentId, eventName, reaction);
-
-    // Now start the actual processing
+    // Note: Reaction is added in action.yml for immediate feedback
     core.info(`🎯 Starting PR Assistant for comment ${commentId}`);
     core.info(`📦 Repository: ${owner}/${repo}`);
     core.info(`📝 Event: ${eventName}`);
