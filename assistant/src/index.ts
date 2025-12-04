@@ -305,11 +305,13 @@ After making the changes, provide a brief summary of what you implemented.`;
   // Use Auggie SDK to implement changes
   try {
     // Initialize Auggie client
+    const workspaceRoot = process.cwd();
     core.info('🔧 Initializing Auggie client...');
+    core.info(`📁 Workspace root: ${workspaceRoot}`);
     const auggie = await Auggie.create({
       apiKey: augmentApiToken,
       apiUrl: augmentApiUrl,
-      workspaceRoot: process.cwd(),
+      workspaceRoot,
       model: 'sonnet4.5',
       allowIndexing: true,
     });
@@ -358,6 +360,10 @@ After making the changes, provide a brief summary of what you implemented.`;
 
     core.info('📝 Auggie response:');
     core.info(response);
+
+    // Wait a moment to ensure all file writes are flushed to disk
+    core.info('⏳ Waiting for file writes to complete...');
+    await new Promise(resolve => setTimeout(resolve, 2000));
 
     // Close the Auggie connection
     await auggie.close();
