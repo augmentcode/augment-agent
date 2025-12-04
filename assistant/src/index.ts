@@ -310,7 +310,7 @@ Please implement the requested changes based on the comment and PR context above
 
     // Send the instruction to Auggie
     core.info('💬 Sending instruction to Auggie...');
-    const response = await auggie.prompt(instruction, { isAnswerOnly: true });
+    const response = await auggie.prompt(instruction, { isAnswerOnly: false });
 
     core.info('📝 Auggie response:');
     core.info(response);
