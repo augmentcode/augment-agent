@@ -273,7 +273,10 @@ async function invokeAuggie(context: PRContext): Promise<void> {
   }
 
   // Build context for Auggie
-  const instruction = `${context.commentBody}
+  const instruction = `You are an AI assistant helping to implement code changes in a Pull Request.
+
+## User Request
+${context.commentBody}
 
 ## PR Context
 - **PR #${context.prNumber}**: ${context.title}
@@ -292,7 +295,10 @@ ${context.commentThread.map(c => `**${c.author}** (${c.createdAt}):\n${c.body}`)
 ${context.diff}
 \`\`\`
 
-Please implement the requested changes based on the comment and PR context above.`;
+## Instructions
+You MUST actually implement the requested changes by editing the files. Do NOT just describe what you would do.
+Use the str-replace-editor, save-file, or other file editing tools to make the actual changes to the code.
+After making the changes, provide a brief summary of what you implemented.`;
 
   core.info('📤 Sending request to Auggie...');
 
@@ -310,7 +316,7 @@ Please implement the requested changes based on the comment and PR context above
 
     // Send the instruction to Auggie
     core.info('💬 Sending instruction to Auggie...');
-    const response = await auggie.prompt(instruction, { isAnswerOnly: false });
+    const response = await auggie.prompt(instruction, { isAnswerOnly: true });
 
     core.info('📝 Auggie response:');
     core.info(response);
