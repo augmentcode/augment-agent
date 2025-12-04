@@ -27,7 +27,7 @@ type ReactionType = (typeof VALID_REACTIONS)[number];
 /**
  * Get input from environment variables (GitHub Actions pattern)
  */
-function getInput(name: string, required: boolean = false): string {
+function getInput(name: string, required = false): string {
   const envName = `INPUT_${name.toUpperCase().replace(/ /g, '_')}`;
   const value = process.env[envName] || '';
 
@@ -101,6 +101,7 @@ async function addReaction(
     }
   } catch (error) {
     if (error instanceof Error) {
+      // biome-ignore lint/suspicious/noExplicitAny: POC
       const apiError = error as any;
       const requestId = apiError.response?.headers?.['x-github-request-id'] || 'unknown';
       const status = apiError.status || '';
@@ -124,8 +125,8 @@ async function main(): Promise<void> {
     const reactionInput = getInput('reaction') || 'eyes';
 
     // Validate inputs
-    const commentId = parseInt(commentIdStr, 10);
-    if (isNaN(commentId)) {
+    const commentId = Number.parseInt(commentIdStr, 10);
+    if (Number.isNaN(commentId)) {
       throw new Error(`Invalid comment_id: ${commentIdStr}. Must be a number.`);
     }
 
