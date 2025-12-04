@@ -434,16 +434,17 @@ async function main(): Promise<void> {
     const reaction = validateReaction(reactionInput);
     const { owner, repo } = parseRepository();
 
-    core.info(`🎯 Starting PR Assistant for comment ${commentId}`);
-    core.info(`📦 Repository: ${owner}/${repo}`);
-    core.info(`📝 Event: ${eventName}`);
-
     // Create Octokit instance
     const octokit = new Octokit({ auth: githubToken });
 
-    // Step 1: Add reaction to show we're processing
-    core.info('👀 Adding reaction to comment...');
+    // Step 1: Add reaction IMMEDIATELY to give user quick feedback
+    core.info('👀 Adding reaction to comment for quick feedback...');
     await addReaction(octokit, owner, repo, commentId, eventName, reaction);
+
+    // Now start the actual processing
+    core.info(`🎯 Starting PR Assistant for comment ${commentId}`);
+    core.info(`📦 Repository: ${owner}/${repo}`);
+    core.info(`📝 Event: ${eventName}`);
 
     // Step 2: Get PR number
     core.info('🔍 Finding associated PR...');
