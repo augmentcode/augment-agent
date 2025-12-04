@@ -226,21 +226,25 @@ async function commitAndPush(
   // Stage all changes
   await exec.exec('git', ['add', '-A']);
 
-  // Check if there are changes to commit
-  let hasChanges = false;
-  await exec.exec('git', ['diff', '--cached', '--quiet'], {
-    ignoreReturnCode: true,
+  // Check if there are changes to commit using git status
+  let statusOutput = '';
+  await exec.exec('git', ['status', '--porcelain'], {
     listeners: {
-      errline: () => {
-        hasChanges = true;
+      stdout: (data: Buffer) => {
+        statusOutput += data.toString();
       },
     },
   });
+
+  const hasChanges = statusOutput.trim().length > 0;
 
   if (!hasChanges) {
     core.info('ℹ️ No changes to commit');
     return;
   }
+
+  core.info(`📝 Changes detected:\n${statusOutput}`);
+
 
   // Commit changes
   const commitMessage = `feat: implement changes requested in comment #${commentId}
