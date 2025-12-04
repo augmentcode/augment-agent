@@ -314,6 +314,44 @@ After making the changes, provide a brief summary of what you implemented.`;
       allowIndexing: true,
     });
 
+    // Set up streaming to log tool usage and progress
+    let currentToolName = '';
+    auggie.onSessionUpdate(event => {
+      switch (event.update.sessionUpdate) {
+        case 'agent_message_chunk':
+          // Stream agent text responses (optional - can be verbose)
+          // if (event.update.content.type === 'text') {
+          //   core.info(event.update.content.text);
+          // }
+          break;
+
+        case 'tool_call':
+          // Log when a tool starts executing
+          currentToolName = event.update.title || 'unknown tool';
+          core.info(`🔧 Tool: ${currentToolName}`);
+          if (event.update.rawInput) {
+            core.info(`   Input: ${JSON.stringify(event.update.rawInput)}`);
+          }
+          break;
+
+        case 'tool_call_update':
+          // Log when a tool finishes executing
+          core.info(`✅ Tool completed: ${currentToolName}`);
+          if (event.update.rawOutput) {
+            const output = JSON.stringify(event.update.rawOutput);
+            // Truncate long outputs
+            const truncated = output.length > 200 ? `${output.substring(0, 200)}...` : output;
+            core.info(`   Output: ${truncated}`);
+          }
+          break;
+
+        default:
+          // Log other session updates for debugging
+          // core.debug(`Session update: ${event.update.sessionUpdate}`);
+          break;
+      }
+    });
+
     // Send the instruction to Auggie
     core.info('💬 Sending instruction to Auggie...');
     const response = await auggie.prompt(instruction, { isAnswerOnly: true });
