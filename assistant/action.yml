@@ -19,6 +19,12 @@ inputs:
     description: "The reaction type to add (e.g., eyes, rocket, heart, hooray, confused, +1, -1, laugh)"
     required: false
     default: "eyes"
+  augment_api_token:
+    description: "API token for Augment services. Store as repository secret for security."
+    required: false
+  augment_api_url:
+    description: "URL endpoint for Augment API requests. Store as repository variable."
+    required: false
 
 outputs:
   success:
@@ -46,4 +52,6 @@ runs:
         INPUT_EVENT_NAME: ${{ inputs.event_name }}
         INPUT_REACTION: ${{ inputs.reaction }}
         GITHUB_REPOSITORY: ${{ github.repository }}
+        AUGMENT_API_TOKEN: ${{ inputs.augment_api_token }}
+        AUGMENT_API_URL: ${{ inputs.augment_api_url }}
 
