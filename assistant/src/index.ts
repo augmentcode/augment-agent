@@ -450,12 +450,19 @@ async function main(): Promise<void> {
       await commitAndPush(commentId, context.headBranch, githubToken, owner, repo);
 
       // Step 7: Add success comment to PR
+      const quotedComment = context.commentBody
+        .split('\n')
+        .map(line => `> ${line}`)
+        .join('\n');
+
       await addPRComment(
         octokit,
         owner,
         repo,
         prNumber,
-        `✅ Successfully implemented changes requested in [comment](https://github.com/${owner}/${repo}/issues/${prNumber}#issuecomment-${commentId})!
+        `${quotedComment}
+
+✅ Successfully implemented the requested changes!
 
 The changes have been committed to the \`${context.headBranch}\` branch.`
       );
@@ -464,14 +471,21 @@ The changes have been committed to the \`${context.headBranch}\` branch.`
       core.info('✨ PR Assistant completed successfully');
     } catch (error) {
       // Add failure comment to PR
+      const quotedComment = context.commentBody
+        .split('\n')
+        .map(line => `> ${line}`)
+        .join('\n');
+
       await addPRComment(
         octokit,
         owner,
         repo,
         prNumber,
-        `❌ Failed to implement changes requested in [comment](https://github.com/${owner}/${repo}/issues/${prNumber}#issuecomment-${commentId}).
+        `${quotedComment}
 
-Error: ${error instanceof Error ? error.message : String(error)}
+❌ Failed to implement the requested changes.
+
+**Error:** ${error instanceof Error ? error.message : String(error)}
 
 Please check the [workflow logs](https://github.com/${owner}/${repo}/actions) for more details.`
       );
