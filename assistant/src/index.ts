@@ -10,8 +10,6 @@ import * as exec from '@actions/exec';
 import { Octokit } from '@octokit/rest';
 import { Auggie } from '@augmentcode/auggie-sdk';
 
-
-
 /**
  * PR Context gathered from GitHub
  */
@@ -59,15 +57,11 @@ function parseRepository(): { owner: string; repo: string } {
   const [owner, repo] = repository.split('/');
 
   if (!owner || !repo) {
-    throw new Error(
-      `Invalid GITHUB_REPOSITORY format: ${repository}. Expected format: owner/repo`
-    );
+    throw new Error(`Invalid GITHUB_REPOSITORY format: ${repository}. Expected format: owner/repo`);
   }
 
   return { owner, repo };
 }
-
-
 
 /**
  * Get PR number from comment
@@ -204,11 +198,7 @@ async function gatherPRContext(
  */
 async function configureGit(): Promise<void> {
   await exec.exec('git', ['config', 'user.name', 'github-actions[bot]']);
-  await exec.exec('git', [
-    'config',
-    'user.email',
-    'github-actions[bot]@users.noreply.github.com',
-  ]);
+  await exec.exec('git', ['config', 'user.email', 'github-actions[bot]@users.noreply.github.com']);
 }
 
 /**
@@ -244,7 +234,6 @@ async function commitAndPush(
   }
 
   core.info(`📝 Changes detected:\n${statusOutput}`);
-
 
   // Commit changes
   const commitMessage = `feat: implement changes requested in comment #${commentId}
@@ -503,4 +492,3 @@ main().catch(error => {
   const errorMessage = error instanceof Error ? error.message : String(error);
   core.setFailed(`Unexpected error: ${errorMessage}`);
 });
-

@@ -25,7 +25,7 @@ A new GitHub Action has been created in the `augment-agent` repository that can 
 ### Key Features
 
 - ✅ React to PR review comments
-- ✅ React to issue comments  
+- ✅ React to issue comments
 - ✅ Support for all 8 GitHub reaction types (+1, -1, laugh, confused, heart, hooray, rocket, eyes)
 - ✅ Configurable reaction type with sensible default (eyes)
 - ✅ Full TypeScript implementation with type safety
@@ -73,17 +73,17 @@ Replace the existing `actions/github-script@v7` step (lines 31-53) with:
 
 ## Inputs
 
-| Input | Description | Required | Default |
-|-------|-------------|----------|---------|
-| `github_token` | GitHub token for API access | Yes | - |
-| `comment_id` | The ID of the comment to react to | Yes | - |
-| `event_name` | The GitHub event name | Yes | - |
-| `reaction` | The reaction type to add | No | `eyes` |
+| Input          | Description                       | Required | Default |
+| -------------- | --------------------------------- | -------- | ------- |
+| `github_token` | GitHub token for API access       | Yes      | -       |
+| `comment_id`   | The ID of the comment to react to | Yes      | -       |
+| `event_name`   | The GitHub event name             | Yes      | -       |
+| `reaction`     | The reaction type to add          | No       | `eyes`  |
 
 ## Outputs
 
-| Output | Description |
-|--------|-------------|
+| Output    | Description                                                     |
+| --------- | --------------------------------------------------------------- |
 | `success` | Whether the reaction was successfully added (`true` or `false`) |
 
 ## Supported Reactions
@@ -135,7 +135,7 @@ jobs:
           repository: ${{ github.repository }}
           token: ${{ secrets.GITHUB_TOKEN }}
           ref: ${{ github.event.pull_request.head.ref }}
-      
+
       - name: React to original comment with eyes
         uses: augmentcode/augment-agent/comment-reaction@feature/comment-reaction-action
         with:
@@ -143,11 +143,10 @@ jobs:
           comment_id: ${{ github.event.comment.id }}
           event_name: ${{ github.event_name }}
           reaction: eyes
-      
+
       # ... rest of your workflow steps
 ```
 
 ## Support
 
 For issues or questions, please refer to the README.md in the comment-reaction directory or create an issue in the augment-agent repository.
-

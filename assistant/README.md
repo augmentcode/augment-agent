@@ -93,14 +93,14 @@ jobs:
 
 ## Inputs
 
-| Input | Description | Required | Default |
-|-------|-------------|----------|---------|
-| `github_token` | GitHub token for API access and git operations | Yes | - |
-| `comment_id` | The ID of the comment that triggered the workflow | Yes | - |
-| `event_name` | The GitHub event name (`pull_request_review_comment` or `issue_comment`) | Yes | - |
-| `augment_api_token` | Augment API token for authentication | Yes | - |
-| `augment_api_url` | Augment API URL endpoint | Yes | - |
-| `reaction` | The reaction type to add (optional) | No | `eyes` |
+| Input               | Description                                                              | Required | Default |
+| ------------------- | ------------------------------------------------------------------------ | -------- | ------- |
+| `github_token`      | GitHub token for API access and git operations                           | Yes      | -       |
+| `comment_id`        | The ID of the comment that triggered the workflow                        | Yes      | -       |
+| `event_name`        | The GitHub event name (`pull_request_review_comment` or `issue_comment`) | Yes      | -       |
+| `augment_api_token` | Augment API token for authentication                                     | Yes      | -       |
+| `augment_api_url`   | Augment API URL endpoint                                                 | Yes      | -       |
+| `reaction`          | The reaction type to add (optional)                                      | No       | `eyes`  |
 
 ## Supported Reactions
 
@@ -115,8 +115,8 @@ jobs:
 
 ## Outputs
 
-| Output | Description |
-|--------|-------------|
+| Output    | Description                                                     |
+| --------- | --------------------------------------------------------------- |
 | `success` | Whether the reaction was successfully added (`true` or `false`) |
 
 ## Permissions
@@ -125,9 +125,9 @@ The action requires the following permissions:
 
 ```yaml
 permissions:
-  contents: read        # To read repository content
-  pull-requests: write  # To add reactions and comments to PRs
-  issues: write         # To add reactions and comments to issues
+  contents: read # To read repository content
+  pull-requests: write # To add reactions and comments to PRs
+  issues: write # To add reactions and comments to issues
 ```
 
 ## Setup
@@ -152,6 +152,7 @@ Create a test PR and comment with `@augment <your instruction>`. For example:
 ```
 
 The assistant will:
+
 - React with 👀 to acknowledge
 - Gather PR context
 - Implement the requested changes
@@ -187,4 +188,3 @@ The assistant will:
 ## License
 
 MIT
-
