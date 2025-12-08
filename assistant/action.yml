@@ -25,6 +25,9 @@ inputs:
   augment_api_url:
     description: "URL endpoint for Augment API requests. Store as repository variable."
     required: false
+  comment_body:
+    description: "The body of the comment (used to detect /commit vs /pr command)"
+    required: false
 
 outputs:
   success:
@@ -87,6 +90,7 @@ runs:
         INPUT_COMMENT_ID: ${{ inputs.comment_id }}
         INPUT_EVENT_NAME: ${{ inputs.event_name }}
         INPUT_REACTION: ${{ inputs.reaction }}
+        INPUT_COMMENT_BODY: ${{ inputs.comment_body }}
         GITHUB_REPOSITORY: ${{ github.repository }}
         AUGMENT_API_TOKEN: ${{ inputs.augment_api_token }}
         AUGMENT_API_URL: ${{ inputs.augment_api_url }}
