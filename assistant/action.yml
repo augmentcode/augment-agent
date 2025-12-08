@@ -1,0 +1,96 @@
+name: "PR Assistant"
+description: "AI-powered PR assistant that implements changes based on comments using Auggie SDK"
+author: "Augment Code"
+branding:
+  icon: "zap"
+  color: "purple"
+
+inputs:
+  github_token:
+    description: "GitHub token for API access. Must have permissions to add reactions."
+    required: true
+  comment_id:
+    description: "The ID of the comment to react to"
+    required: true
+  event_name:
+    description: "The GitHub event name (pull_request_review_comment or issue_comment)"
+    required: true
+  reaction:
+    description: "The reaction type to add (e.g., eyes, rocket, heart, hooray, confused, +1, -1, laugh)"
+    required: false
+    default: "eyes"
+  augment_api_token:
+    description: "API token for Augment services. Store as repository secret for security."
+    required: false
+  augment_api_url:
+    description: "URL endpoint for Augment API requests. Store as repository variable."
+    required: false
+  comment_body:
+    description: "The body of the comment (used to detect /commit vs /pr command)"
+    required: false
+
+outputs:
+  success:
+    description: "Whether the reaction was successfully added"
+    value: ${{ steps.react.outputs.success }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Add reaction for quick feedback
+      uses: actions/github-script@v7
+      with:
+        github-token: ${{ inputs.github_token }}
+        script: |
+          const commentId = parseInt('${{ inputs.comment_id }}');
+          const eventName = '${{ inputs.event_name }}';
+          const reaction = '${{ inputs.reaction }}' || 'eyes';
+
+          try {
+            if (eventName === 'pull_request_review_comment') {
+              await github.rest.reactions.createForPullRequestReviewComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: commentId,
+                content: reaction
+              });
+            } else if (eventName === 'issue_comment') {
+              await github.rest.reactions.createForIssueComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: commentId,
+                content: reaction
+              });
+            }
+            console.log(`Added :${reaction}: reaction to comment ${commentId}`);
+          } catch (error) {
+            console.warn(`Failed to add reaction: ${error.message}`);
+          }
+
+    - name: Setup Node
+      uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+      with:
+        node-version: 22
+
+    - name: Install Auggie CLI
+      run: npm install -g @augmentcode/auggie
+      shell: bash
+
+    - name: Install Action Dependencies
+      run: npm install --production
+      shell: bash
+      working-directory: ${{ github.action_path }}
+
+    - name: Run PR Assistant
+      id: react
+      run: npx tsx ${{ github.action_path }}/src/index.ts
+      shell: bash
+      env:
+        INPUT_GITHUB_TOKEN: ${{ inputs.github_token }}
+        INPUT_COMMENT_ID: ${{ inputs.comment_id }}
+        INPUT_EVENT_NAME: ${{ inputs.event_name }}
+        INPUT_REACTION: ${{ inputs.reaction }}
+        INPUT_COMMENT_BODY: ${{ inputs.comment_body }}
+        GITHUB_REPOSITORY: ${{ github.repository }}
+        AUGMENT_API_TOKEN: ${{ inputs.augment_api_token }}
+        AUGMENT_API_URL: ${{ inputs.augment_api_url }}
