@@ -1,0 +1,44 @@
+{
+  "id": "home-assistant-automation",
+  "name": "Home Assistant Automation",
+  "description": "Automate your Home Assistant devices using natural language commands",
+  "version": "1.0.0",
+  "author": "Augment Code",
+  "license": "MIT",
+  "type": "skill",
+  "requiredSettings": [
+    {
+      "key": "HOMEASSISTANT_API_URL",
+      "label": "Home Assistant API URL",
+      "type": "string",
+      "description": "The base URL of your Home Assistant instance (e.g., http://localhost:8123)",
+      "placeholder": "http://localhost:8123"
+    },
+    {
+      "key": "HOMEASSISTANT_API_KEY",
+      "label": "Home Assistant API Key",
+      "type": "password",
+      "description": "Your Home Assistant long-lived access token",
+      "placeholder": "eyJhbGc..."
+    }
+  ],
+  "capabilities": [
+    "turn_on_device",
+    "turn_off_device",
+    "get_device_status",
+    "set_brightness",
+    "set_temperature",
+    "execute_scene",
+    "get_automation_status"
+  ],
+  "supportedLanguages": ["en"],
+  "category": "home-automation",
+  "icon": "home",
+  "keywords": [
+    "home-automation",
+    "home-assistant",
+    "iot",
+    "smart-home",
+    "device-control"
+  ]
+}
